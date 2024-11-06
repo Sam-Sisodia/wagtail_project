@@ -252,55 +252,12 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
                 required=True,
                 )
 
-            # FormField.objects.create(
-            #     page=self,
-            #     label="Event Date",
-            #     field_type="date",
-            #     required=True,
-            #     )
-            
-            # FormField.objects.create(
-            #     page=self,
-            #     label="Event Time",
-            #     field_type="time",
-            #     required=True,
-            #     )
-
-
-
-            # FormField.objects.create(
-            #     page=self,
-            #     label="Event Description",
-            #     field_type="multiline",
-            #     required=True,
-            #     )
-            
-
-            # FormField.objects.create(
-            #     page=self,
-            #     label="Upload Event Featured Image",
-            #     help_text = "",
-            #     field_type="file",
-            #     required=True,
-            # )
-
-            # FormField.objects.create(
-            #     page=self,
-            #     label="Upload Event Featured Image",
-            #     help_text = "Add Event Images(Upto 5 Images)",
-            #     field_type="file",
-            #     required=True,
-                
-            # )
-
-
+           
             
 
 
 
 
-    
-    
 
 class  ElectionPagePerson(Orderable):
     page = ParentalKey(
