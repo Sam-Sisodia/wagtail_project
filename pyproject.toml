@@ -12,6 +12,8 @@ django = "5.1.2"   # Django dependency
 wagtail-modeladmin = "2.1.0"
 uvicorn = "0.32.0"
 python-dotenv = "^1.0.1"
+django-crispy-forms = "^2.3"
+crispy-bootstrap5 = "^2024.10"
 
 [build-system]
 requires = ["poetry-core"]

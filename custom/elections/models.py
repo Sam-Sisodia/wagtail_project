@@ -50,10 +50,22 @@ class ElectionsPage(RichTextPageAbstract):
         blank=True,
         null=True,
     )
+
+    button_text_two = models.TextField(blank=True, null=True,default="Run for Position")
+    link_page_two = models.ForeignKey(
+        'wagtailcore.Page',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
+
     heading_two =  models.TextField(blank=True, null=True)
     sub_heading_two =  models.TextField(blank=True, null=True)
-    button_text_two = models.TextField(blank=True, null=True,default="Get on Ballot")
-    link_page_two = models.ForeignKey(
+
+    nomination_heading = models.TextField(blank=True, null=True,default="Apply for the nomination Check the criteria and Eligibility")
+    button_text_three = models.TextField(blank=True, null=True,default="Get on Ballot")
+    link_page_three = models.ForeignKey(
         'wagtailcore.Page',
         on_delete=models.SET_NULL,
         related_name='+',
@@ -72,13 +84,19 @@ class ElectionsPage(RichTextPageAbstract):
         MultiFieldPanel([
             FieldPanel('button_text_one'),
             FieldPanel('link_page_one'),
-        ], heading='Add Position  Button Page'),
+        ], heading='Add Position  Button Page One'),
         FieldPanel("heading_two"),
         FieldPanel("sub_heading_two"),
-      
+        FieldPanel("nomination_heading"),
+
         MultiFieldPanel([
             FieldPanel('button_text_two'),
             FieldPanel('link_page_two'),
+        ], heading='Add Position  Button Page Two'),
+      
+        MultiFieldPanel([
+            FieldPanel('button_text_three'),
+            FieldPanel('link_page_three'),
         ], heading='Add Ballot Page '),
 
     ]
@@ -94,8 +112,9 @@ class ElectionsPage(RichTextPageAbstract):
     def update_context(self,context):
         election_persons= SingleElectionPage.objects.all()
         context.update({
-            'election_persons': election_persons,
+            'elections_users': election_persons,
         })
+
         return context
 
     def serve(self,request,*args, **kwargs):
@@ -175,15 +194,18 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
         use_json_field=True,
         blank=True,
     )
+    page_notice  = models.TextField(blank=True, null=True)
     heading = models.TextField(blank=True, null=True)
     party_name =  models.TextField(blank=True, null=True)
     position_title = models.TextField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     result_declare_heading = models.TextField(blank=True, null=True)
+    form_description_message = models.TextField(blank=True, null=True)
 
     parent_page_types = ['elections.ElectionsPage']
     subpage_types = []
     content_panels = AbstractEmailForm.content_panels + [
+        FieldPanel("page_notice"),
         FieldPanel("heading"),
         FieldPanel("party_name"),
         FieldPanel("position_title"),
@@ -191,6 +213,8 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
         FieldPanel("result_declare_heading"),
         InlinePanel('election_page_person', label='Election Page Person'),
         InlinePanel("form_fields", heading="Form fields", label="Field"),
+        FieldPanel("form_description_message"),
+
         FormSubmissionsPanel(),
         MultiFieldPanel(
             [
@@ -216,6 +240,26 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
     class Meta:
         verbose_name = 'Single Election Page'
         verbose_name_plural = 'Single Election Page'
+
+
+
+    def serve(self,request,*args, **kwargs):
+        request.is_preview = False
+        template = self.get_template(request, *args, **kwargs)
+        context = self.get_context(request, *args, **kwargs)
+        # context = self.update_context(default_context)
+        if request.method == 'POST':
+            form = self.get_form(request.POST, request.FILES, page=self)
+            if form.is_valid():
+               self.process_form_submission(form)
+        else:
+            context['form'] = self.get_form(page=self)
+       
+        return TemplateResponse(
+            request,
+            template,
+            context,
+        )
 
 
 
@@ -279,8 +323,12 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
                 field_type="multiline",
                 required=True,
                 )
+    
 
-           
+    
+
+
+
             
 
 
