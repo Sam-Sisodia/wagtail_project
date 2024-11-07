@@ -14,6 +14,7 @@ from wagtail.fields import RichTextField, StreamField
 from wagtail.images.models import Image
 from wagtail.blocks import RichTextBlock
 from wagtail.models import Orderable
+from django.template.response import TemplateResponse
 
 
 ##################################################################################################
@@ -27,8 +28,8 @@ class NewsPage(RichTextPageAbstract):
         use_json_field=True,
         blank=True,
     )
-    name = models.TextField(blank=True, null=True)
-    heading = models.TextField(blank=True, null=True)
+    name = models.TextField(blank=True, null=True,default="NEWS")
+   
     button_text = models.TextField(blank=True, null=True,default ="Read more")
     link_page = models.ForeignKey(
         'wagtailcore.Page',
@@ -37,18 +38,45 @@ class NewsPage(RichTextPageAbstract):
         blank=True,
         null=True,
     )
+    bottom_heading = models.TextField(blank=True, null=True)
+    bottom_image_one = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
+    bottom_image_two = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
+    bottom_button_text = models.TextField(blank=True, null=True,default ="Read more")
+    bottom_link_page = models.ForeignKey(
+        'wagtailcore.Page',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
     
-
     content_panels = RichTextPageAbstract.content_panels + [
         # 
         FieldPanel("name"),
-        FieldPanel("heading"),
         MultiFieldPanel([
             FieldPanel('button_text'),
             FieldPanel('link_page'),
         ], heading='Add Read more  Button'),
-       
 
+        MultiFieldPanel([
+            FieldPanel('bottom_heading'),
+            FieldPanel('bottom_image_one'),
+            FieldPanel('bottom_image_two'),
+            FieldPanel('bottom_button_text'),
+            FieldPanel('bottom_link_page'),
+        ], heading='Add Bottom Section'),
     ]
 
     parent_page_types = ['home.HomePage']
@@ -61,12 +89,40 @@ class NewsPage(RichTextPageAbstract):
         verbose_name_plural = 'News Pages'
 
 
+    def update_context(self,context):
+        news_details = NewsDetailPage.objects.all()
+        context.update({
+            'news_details': news_details,
+           
+        })
+        return context
+
+    def serve(self,request,*args, **kwargs):
+        request.is_preview = False
+        template = self.get_template(request, *args, **kwargs)
+        default_context = self.get_context(request, *args, **kwargs)
+        context = self.update_context(default_context)
+       
+        return TemplateResponse(
+            request,
+            template,
+            context,
+        )
+     
+
 
 class NewsDetailPage(RichTextPageAbstract):
     body = StreamField(
         richtext_blocks,
         use_json_field=True,
         blank=True,
+    )
+    news_bg_image = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
     )
     name = models.TextField(blank=True, null=True,default="LATEST NEWS")
     date = models.DateField(null=True,blank=True)
@@ -83,32 +139,53 @@ class NewsDetailPage(RichTextPageAbstract):
         blank=True,
         null=True,
     )
-    # event_date = models.DateField(blank=True, null=True)
 
-    button_text = models.TextField(blank=True, null=True,default ="Read more")
-    link_page = models.ForeignKey(
+    bottom_heading = models.TextField(blank=True, null=True)
+    bottom_image_one = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
+    bottom_image_two = models.ForeignKey(
+        'wagtailimages.Image',
+        on_delete=models.SET_NULL,
+        related_name='+',
+        blank=True,
+        null=True,
+    )
+    bottom_button_text = models.TextField(blank=True, null=True,default ="History")
+    bottom_link_page = models.ForeignKey(
         'wagtailcore.Page',
         on_delete=models.SET_NULL,
         related_name='+',
         blank=True,
         null=True,
     )
- 
 
     content_panels = RichTextPageAbstract.content_panels + [
-        
+        FieldPanel("news_bg_image"),
         FieldPanel("name"),
         FieldPanel("heading"),
         FieldPanel("date"),
         FieldPanel("any_headline_heading"),
         FieldPanel("any_headline_sort_description"),
         InlinePanel('news_page_images', label='News Page Images'),
-     
+    
         MultiFieldPanel([
             FieldPanel('main_headline_text'),
             FieldPanel('main_headline_description'),
             FieldPanel('main_headline_image'),
         ], heading='Add Main headline content'),
+
+        MultiFieldPanel([
+            FieldPanel('bottom_heading'),
+            FieldPanel('bottom_image_one'),
+            FieldPanel('bottom_image_two'),
+            FieldPanel('bottom_button_text'),
+            FieldPanel('bottom_link_page'),
+        ], heading='Add Bottom Section'),
        
 
     ]
@@ -119,6 +196,19 @@ class NewsDetailPage(RichTextPageAbstract):
     class Meta:
         verbose_name = 'News Detail Page'
         verbose_name_plural = 'News Detail Page'
+
+
+    def serve(self,request,*args, **kwargs):
+        request.is_preview = False
+        template = self.get_template(request, *args, **kwargs)
+        context = self.get_context(request, *args, **kwargs)
+        # context = self.update_context(default_context)
+       
+        return TemplateResponse(
+            request,
+            template,
+            context,
+        )
 
 
 
