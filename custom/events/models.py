@@ -147,7 +147,7 @@ class EventPage(RichTextPageAbstract):
         blank=True,
         null=True,
     )
-    
+
     # event_full_description = models.TextField(blank=True, null=True)
     button_text_two = models.TextField(blank=True, null=True)
     link_page_two= models.ForeignKey(
