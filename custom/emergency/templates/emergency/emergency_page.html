@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+{% load static wagtailcore_tags wagtailimages_tags humanize %}
+{% block title %}Emergency Page{% endblock %}
+{% block main %}
+
+
+  
+  <main class="main">
+      
+     <div class="emergency-services">
+         <div class="container-fluid">
+             <div class="row">
+                 <div class="col-md-3">
+                     <div class="service-left faq">
+                         <div class="faq-container">
+                    <div class="faq-item">
+                         <h2>{{page.heading}}</h2>
+                         <div class="faq-content">
+                            <div class="tab">
+                              <ul>
+                                {% for sidesername in page.emergency_contents.all %}
+                                <li class="tablinks active" onclick="openService(event, 'Fire')" id="defaultOpen">
+                                    <img class="service-icon" src="{% static 'img/emergency-service/fire.svg' %}"> 
+                                    <span>{{sidesername.service_sidebar_name}}</span> 
+                                    <img class="service-arrow" src="{% static 'img/business-development/feather-arrow-up.png' %}">
+                                </li>
+                                {% endfor %}
+                              </ul>
+                            </div>
+                            </div>
+                            <div class="faq-toggle"><img src="{% static 'img/business-development/feather-arrow-up.png' %}"></div>
+                            </div>
+                            </div>
+                   </div>
+                 </div>
+                 <div class="col-md-9">
+                    {% for service in page.emergency_contents.all %}
+                    <div class="service-right">
+                        <div id="Fire" class="tabcontent">
+                            <div class="call-email">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="d-flex">
+                                           <h2>{{service.service_name_heading}}</h2>
+                                            <img class="service-icon" src="{%static 'img/emergency-service/fire.svg' %}"> 
+                                        </div>
+                                         <p>{{service.short_description}}</p>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex">
+                                            <div class="call">
+                                                <h3>{{service.call_text}}</h3>
+                                                <div class="contact-btn">
+                                                <a href="tel:{{service.mobile_number}}">{{service.mobile_number}} 
+                                                    <img class="icon" src="{% static 'img/emergency-service/call.svg' %}"></a> 
+                                                </div>
+                                            </div>
+                                            <div class="call">
+                                                <h3>{{service.email_text}}</h3>
+                                                <div class="contact-btn">
+                                                <a href="mailto:help@firedept.com">
+                                                    {{service.email}}
+                                                     <img class="icon" src="{% static 'img/emergency-service/mail.svg' %}"></a> 
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bottom-content">
+                               <h2>{{service.heading_two}}</h2>
+                               <p>{{service.description}} </p>
+                               {% image  service.image width-1024 as serviceimg %}
+                               <img src="{{serviceimg.url}}">
+                               <div class="faq">
+                                 <div class="faq-container">
+                                    <div class="faq-item">
+                                        <h3>{{service.button_name}}</h3>
+                                        <div class="faq-content">
+                                            <p>{{service.button_text}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </div>
+                        {% endfor %}
+                        
+                        </div>
+                    </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+      
+  </main>
+  
+  <script>
+function openService(evt, serviceName) {
+  var i, tabcontent, tablinks;
+  tabcontent = document.getElementsByClassName("tabcontent");
+  for (i = 0; i < tabcontent.length; i++) {
+    tabcontent[i].style.display = "none";
+  }
+  tablinks = document.getElementsByClassName("tablinks");
+  for (i = 0; i < tablinks.length; i++) {
+    tablinks[i].className = tablinks[i].className.replace(" active", "");
+  }
+  document.getElementById(serviceName).style.display = "block";
+  evt.currentTarget.className += " active";
+}
+
+document.getElementById("defaultOpen").click();
+  </script>
+  
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+    $(".faq-toggle").click(function(){
+        $(".emergency-services").toggleClass("overlay");
+    });
+});
+</script>
+  
+<style>
+    body {
+        background-color: #054651;
+    }
+</style>
+  
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container">
+ {% include 'includes/body.html' %}
+</div>
+{% endblock %}
