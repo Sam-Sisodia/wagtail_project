@@ -204,7 +204,7 @@
             <div class="col-md-5">
                 <h2>{{land.heading}}</h2>
                 <ul>
-                    {% for feature in land.land_spot_feature.all%}
+                    {% for feature in land.land_spot_feature.all %}
                     {% image feature.image width-1024 as iconimg %}
 
                     <li><img src="{{iconimg.url}}" />{{feature.text}}</li>
@@ -218,13 +218,14 @@
                     <div class="carousel-inner">
                         <div class="carousel-item active">
                             <div class="row">
-                            {% for landinfo in land.land_spot_info.all%}
+                            {% for singleland in singlelands %}
                                 
                                 <div class="col-md-6">
-                                    {% image landinfo.image width-1024 as landinfoimg %}
-                                    <img src="{{landinfoimg.url}}" class="d-block w-100" alt="" />
+                                    {% image singleland.main_image  width-1024 as mainimg %}
+                                    <img src="{{mainimg.url}}" class="d-block w-100" alt="" />
+                        
                                     <div class="carousel-caption-1 d-md-block">
-                                        <h5>Best location for Storage house</h5>
+                                        <h5>{{singleland.heading}}</h5>
                                         <a href="">View on map</a>
                                     </div>
                                 </div>
