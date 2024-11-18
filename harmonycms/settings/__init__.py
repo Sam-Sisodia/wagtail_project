@@ -49,11 +49,11 @@ INSTALLED_APPS = [
     #setting
     "wagtail.contrib.routable_page",
     'wagtail.contrib.settings',
+
     #form
     'crispy_forms',
     'crispy_bootstrap5',
     "django.contrib.admin",
-
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -83,6 +83,7 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
@@ -177,21 +178,6 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / "media"
 
 
-
-# STATICFILES_DIRS = [
-#     os.path.join(PROJECT_DIR, "static"),
-# ]
-
-
-# print("+",STATICFILES_DIRS)
-
-# STATIC_ROOT = os.path.join(BASE_DIR, "static")
-# STATIC_URL = "/static/"
-
-# MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-# MEDIA_URL = "/media/"
-
-# Default storage settings, with the staticfiles storage updated.
 # See https://docs.djangoproject.com/en/5.1/ref/settings/#std-setting-STORAGES
 STORAGES = {
     "default": {
