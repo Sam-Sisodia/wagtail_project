@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
 import os
 from pathlib import Path
 from dotenv import load_dotenv
@@ -18,6 +19,9 @@ from dotenv import load_dotenv
 # Specify the path to the .env file
 env_path = Path(__file__).resolve().parent.parent.parent / 'samplefiles' / '.env'
 load_dotenv(dotenv_path=env_path)
+
+# PROJECT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(PROJECT_DIR)
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -42,9 +46,14 @@ INSTALLED_APPS = [
     'wagtail_modeladmin',
     "modelcluster",
     "taggit",
+    #setting
+    "wagtail.contrib.routable_page",
+    'wagtail.contrib.settings',
+    #form
     'crispy_forms',
     'crispy_bootstrap5',
     "django.contrib.admin",
+
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
@@ -54,9 +63,10 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'blocks',
     "core.home",
+    'core.conf',
+    "core.land",
     "core.richtext",
     "core.news",
-    "core.land",
     "core.contact",
     "core.ourteam",
     "custom.business",
@@ -78,6 +88,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
+   
 ]
 
 ROOT_URLCONF = "harmonycms.urls"
@@ -85,9 +96,6 @@ ROOT_URLCONF = "harmonycms.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        # "DIRS": [
-        #     os.path.join(PROJECT_DIR, "templates"),
-        # ],
         'DIRS': [BASE_DIR / 'harmonycms/templates'],
         "APP_DIRS": True,
         "OPTIONS": {
@@ -96,6 +104,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "harmonycms.context_processors.navigation_settings"
             ],
         },
     },
@@ -233,9 +242,7 @@ WAGTAILDOCS_EXTENSIONS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 WAGTAILIMAGES_EXTENSIONS = ["gif", "jpg", "jpeg", "png", "webp", "svg"]
-#

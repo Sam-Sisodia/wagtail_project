@@ -10,7 +10,6 @@ from wagtail.models import Page
 from wagtail.fields import RichTextField, StreamField
 from wagtail.models import Orderable
 
-#form
 from wagtail.contrib.forms.models import (
     FORM_FIELD_CHOICES,
     AbstractEmailForm,
@@ -22,11 +21,9 @@ from django.utils.html import format_html
 from wagtail.contrib.forms.panels import FormSubmissionsPanel
 from wagtail.contrib.forms.views import SubmissionsListView
 from wagtail.admin.panels import FieldPanel, MultiFieldPanel,InlinePanel,FieldRowPanel
-from django.contrib import messages
-
 from modelcluster.fields import ParentalKey
 from django.template.response import TemplateResponse
-
+from django.contrib import messages
 ##################################################################################################
 
 
@@ -109,8 +106,8 @@ class ElectionsPage(RichTextPageAbstract):
     subpage_types = ["elections.SingleElectionPage"]
 
     class Meta:
-        verbose_name = 'Election Pages'
-        verbose_name_plural = 'Election Pages'
+        verbose_name = 'Elections Page'
+        verbose_name_plural = 'Elections Pages'
    
 
     def update_context(self,context):
@@ -206,8 +203,7 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
     result_declare_heading = models.TextField(blank=True, null=True)
     form_description_message = models.TextField(blank=True, null=True)
 
-    parent_page_types = ['elections.ElectionsPage']
-    subpage_types = []
+  
     content_panels = AbstractEmailForm.content_panels + [
         FieldPanel("page_notice"),
         FieldPanel("heading"),
@@ -234,9 +230,7 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
         ),
     ]
     
-
-
-    parent_page_types = ['home.HomePage']   #need to discuss
+    parent_page_types = ['elections.ElectionsPage']   #need to discuss
     subpage_types = []
     form_builder = CustomFormBuilder
     submissions_list_view_class = CustomSubmissionsListView
@@ -244,7 +238,8 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
     class Meta:
         verbose_name = 'Single Election Page'
         verbose_name_plural = 'Single Election Page'
-
+    
+    
 
     def serve(self,request,*args, **kwargs):
         request.is_preview = False
@@ -286,77 +281,13 @@ class SingleElectionPage(RichTextPageAbstract,AbstractEmailForm):
             for field_data in default_fields:
                 FormField.objects.create(page=self, required=True, **field_data)
 
-    # def save(self, *args, **kwargs):
-    #     super().save(*args, **kwargs)
-    #     party_names = Party.objects.values_list('party_name', flat=True)
-    #     position_titles = PartyPosition.objects.values_list('party_position', flat=True)
+    
+
+    
+
+
+
         
-    #     # Join choices into comma-separated strings
-    #     party_choices = ",".join(party_names)
-    #     position_choices = ",".join(position_titles)
-
-    #     # Automatically create default form fields if they don't already exist
-    #     if not  self.form_fields.exists():
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="First Name",
-    #             field_type="singleline",
-    #             required=True,
-    #         )
-
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Last Name",
-    #             field_type="singleline",
-    #             required=True,
-    #         )
-
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Email",
-    #             field_type="email",
-    #             required=True,
-    #         )
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Phone number",
-    #             field_type="singleline",
-    #             required=True,
-    #         )
-
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Choose party",
-    #             field_type="dropdown",
-    #             required=True,
-    #             choices=party_choices)
-            
-
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Choose position",
-    #             field_type="dropdown",
-    #             required=True,
-    #             choices=position_choices)
-            
-
-    #         FormField.objects.create(
-    #             page=self,
-    #             label="Your Intro",
-    #             field_type="multiline",
-    #             required=True,
-    #             )
-    
-
-    
-
-
-
-            
-
-
-
-
 
 class  ElectionPagePerson(Orderable):
     page = ParentalKey(

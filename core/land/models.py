@@ -79,10 +79,6 @@ class  Spotfeature(Orderable):
 
 
 
-
-
-
-
 class SingleLandFeaturedDetails(RichTextPageAbstract):
     body = StreamField(
         richtext_blocks,
@@ -162,9 +158,6 @@ class SingleLandFeaturedDetails(RichTextPageAbstract):
             context,
         )
 
-
-
-    
 
 class  SinglePageFeaturedDetailPageImages(Orderable):
     page = ParentalKey(
